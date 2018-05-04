@@ -19,6 +19,16 @@ public interface Edge<T, V extends Vertex<T>> extends Iterable<T> {
 
     List<T> asList();
 
+    boolean isDirected();
+
+    default boolean contains(V vertex) {
+        return getFirstVertex().equals(vertex) || getSecondVertex().equals(vertex);
+    }
+
+    default boolean contains(T obj) {
+       return getFirst().equals(obj) || getSecond().equals(obj);
+    }
+
     @Override
     default Iterator<T> iterator() {
         return new VarArgIterator<>(getFirst(), getSecond());
