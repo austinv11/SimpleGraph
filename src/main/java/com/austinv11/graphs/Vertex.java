@@ -1,6 +1,8 @@
 package com.austinv11.graphs;
 
+import javax.annotation.Nullable;
+
 public interface Vertex<T> {
 
-    T get();
+    @Nullable T get();
 }

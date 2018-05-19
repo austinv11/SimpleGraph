@@ -1,82 +1,97 @@
 package com.austinv11.graphs;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 public interface Graph<T, V extends Vertex<T>, E extends Edge<T, V>> extends Iterable<T> {
 
+    @Nonnull
     TraversalStrategy<T, V, E, Graph<T, V, E>> defaultTraversalStrategy();
 
+    @Nonnull
     SortStrategy<T, V, E, Graph<T, V, E>> defaultSortStrategy();
 
+    @Nonnull
     PathfindStrategy<T, V, E, Graph<T, V, E>> defaultPathfindStrategy();
 
+    @Nonnull
     default Collection<V> vertices() {
         return vertices(defaultTraversalStrategy());
     }
 
-    Collection<V> vertices(TraversalStrategy<T, V, E, Graph<T, V, E>> strategy);
+    @Nonnull
+    Collection<V> vertices(@Nonnull TraversalStrategy<T, V, E, Graph<T, V, E>> strategy);
 
+    @Nonnull
     default Collection<E> edges() {
         return edges(defaultTraversalStrategy());
     }
 
-    Collection<E> edges(TraversalStrategy<T, V, E, Graph<T, V, E>> strategy);
+    @Nonnull
+    Collection<E> edges(@Nonnull TraversalStrategy<T, V, E, Graph<T, V, E>> strategy);
 
+    @Nonnull
     default Collection<T> values() {
         return values(defaultTraversalStrategy());
     }
 
-    Collection<T> values(TraversalStrategy<T, V, E, Graph<T, V, E>> strategy);
+    @Nonnull
+    Collection<T> values(@Nonnull TraversalStrategy<T, V, E, Graph<T, V, E>> strategy);
 
-    V findVertex(T obj);
+    @Nullable
+    V findVertex(@Nullable T obj);
 
-    boolean areConnected(V vert1, V vert2);
+    boolean areConnected(@Nonnull V vert1, @Nonnull V vert2);
 
-    default boolean areConnected(T obj1, T obj2) {
-        return areConnected(findVertex(obj1), findVertex(obj2));
-    }
+    boolean areConnected(@Nullable T obj1, @Nullable T obj2);
 
-    Collection<E> getConnections(V vert1, V vert2);
+    @Nonnull
+    Collection<E> getConnections(@Nonnull V vert1, @Nonnull V vert2);
 
-    default Collection<E> getConnections(T obj1, T obj2) {
-        return getConnections(findVertex(obj1), findVertex(obj2));
-    }
+    @Nonnull
+    Collection<E> getConnections(@Nonnull T obj1, @Nonnull T obj2);
 
-    List<V> sortVertices(SortStrategy<T, V, E, Graph<T, V, E>> strategy);
+    @Nonnull
+    List<V> sortVertices(@Nonnull SortStrategy<T, V, E, Graph<T, V, E>> strategy);
 
+    @Nonnull
     default List<V> sortVertices() {
         return sortVertices(defaultSortStrategy());
     }
 
-    List<E> pathfind(V vert1, V vert2, PathfindStrategy<T, V, E, Graph<T, V, E>> strategy);
+    @Nonnull
+    List<E> pathfind(@Nonnull V vert1, @Nonnull V vert2, @Nonnull PathfindStrategy<T, V, E, Graph<T, V, E>> strategy);
 
-    default List<E> pathfind(T obj1, T obj2, PathfindStrategy<T, V, E, Graph<T, V, E>> strategy) {
-        return pathfind(findVertex(obj1), findVertex(obj2), strategy);
-    }
+    @Nonnull
+    List<E> pathfind(@Nullable T obj1, @Nullable T obj2, @Nonnull PathfindStrategy<T, V, E, Graph<T, V, E>> strategy);
 
-    default List<E> pathfind(V vert1, V vert2) {
+    @Nonnull
+    default List<E> pathfind(@Nonnull V vert1, @Nonnull V vert2) {
         return pathfind(vert1, vert2, defaultPathfindStrategy());
     }
 
-    default List<E> pathfind(T obj1, T obj2) {
-        return pathfind(findVertex(obj1), findVertex(obj2), defaultPathfindStrategy());
-    }
+    @Nonnull
+    List<E> pathfind(@Nullable T obj1, @Nullable T obj2);
 
-    void addVertex(V vertex);
+    void addVertex(@Nonnull V vertex);
 
-    void removeVertex(V vertex);
+    void removeVertex(@Nonnull V vertex);
 
-    void addEdge(E edge);
+    void addEdge(@Nonnull E edge);
 
-    void removeEdge(E edge);
+    void removeEdge(@Nonnull E edge);
 
     int getVertexCount();
 
     int getEdgeCount();
 
+    void clear();
+
     @Override
+    @Nonnull
     default Iterator<T> iterator() {
         return values().iterator();
     }

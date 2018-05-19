@@ -1,7 +1,10 @@
 package com.austinv11.graphs.impl;
 
 import com.austinv11.graphs.*;
+import com.austinv11.graphs.util.InvalidGraphConfigurationException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -18,9 +21,16 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
 
     private final AdjacencyMatrix matrix;
 
-    public SimpleGraph(TraversalStrategy<T, V, E, Graph<T, V, E>> defaultTraversal,
-                       SortStrategy<T, V, E, Graph<T, V, E>> defaultSort,
-                       PathfindStrategy<T, V, E, Graph<T, V, E>> defaultPathfind,
+    public SimpleGraph(boolean concurrent) {
+        this(new DefaultTraversalStrategy<>(),
+                new DefaultSortStrategy<>(),
+                new DefaultPathfindStrategy<>(),
+                concurrent);
+    }
+
+    public SimpleGraph(@Nonnull TraversalStrategy<T, V, E, Graph<T, V, E>> defaultTraversal,
+                       @Nonnull SortStrategy<T, V, E, Graph<T, V, E>> defaultSort,
+                       @Nonnull PathfindStrategy<T, V, E, Graph<T, V, E>> defaultPathfind,
                        boolean concurrent) {
         this.defaultTraversal = defaultTraversal;
         this.defaultSort = defaultSort;
@@ -30,122 +40,140 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
     }
 
     @Override
+    @Nonnull
     public TraversalStrategy<T, V, E, Graph<T, V, E>> defaultTraversalStrategy() {
         return defaultTraversal;
     }
 
     @Override
+    @Nonnull
     public SortStrategy<T, V, E, Graph<T, V, E>> defaultSortStrategy() {
         return defaultSort;
     }
 
     @Override
+    @Nonnull
     public PathfindStrategy<T, V, E, Graph<T, V, E>> defaultPathfindStrategy() {
         return defaultPathfind;
     }
 
     @Override
+    @Nonnull
     public Collection<V> vertices() {
-        return matrix.vertices();
+        return vertices(defaultTraversal);
     }
 
     @Override
-    public Collection<V> vertices(TraversalStrategy<T, V, E, Graph<T, V, E>> strategy) {
-        return null;
+    @Nonnull
+    public Collection<V> vertices(@Nonnull TraversalStrategy<T, V, E, Graph<T, V, E>> strategy) {
+        return strategy.traverseVertices(this);
     }
 
     @Override
+    @Nonnull
     public Collection<E> edges() {
-        return null;
+        return edges(defaultTraversal);
     }
 
     @Override
-    public Collection<E> edges(TraversalStrategy<T, V, E, Graph<T, V, E>> strategy) {
-        return null;
+    @Nonnull
+    public Collection<E> edges(@Nonnull TraversalStrategy<T, V, E, Graph<T, V, E>> strategy) {
+        return strategy.traverseEdges(this);
     }
 
     @Override
+    @Nonnull
     public Collection<T> values() {
+        return values(defaultTraversal);
+    }
+
+    @Override
+    @Nonnull
+    public Collection<T> values(@Nonnull TraversalStrategy<T, V, E, Graph<T, V, E>> strategy) {
+        return strategy.traverseValues(this);
+    }
+
+    @Override
+    @Nullable
+    public V findVertex(@Nullable T obj) {
         return null;
     }
 
     @Override
-    public Collection<T> values(TraversalStrategy<T, V, E, Graph<T, V, E>> strategy) {
-        return null;
-    }
-
-    @Override
-    public V findVertex(T obj) {
-        return null;
-    }
-
-    @Override
-    public boolean areConnected(V vert1, V vert2) {
+    public boolean areConnected(@Nonnull V vert1, @Nonnull V vert2) {
         return false;
     }
 
     @Override
-    public boolean areConnected(T obj1, T obj2) {
+    public boolean areConnected(@Nullable T obj1, @Nullable T obj2) {
         return false;
     }
 
     @Override
-    public Collection<E> getConnections(V vert1, V vert2) {
+    @Nonnull
+    public Collection<E> getConnections(@Nonnull V vert1, @Nonnull V vert2) {
         return null;
     }
 
     @Override
-    public Collection<E> getConnections(T obj1, T obj2) {
+    @Nonnull
+    public Collection<E> getConnections(@Nullable T obj1, @Nullable T obj2) {
         return null;
     }
 
     @Override
-    public List<V> sortVertices(SortStrategy<T, V, E, Graph<T, V, E>> strategy) {
+    @Nonnull
+    public List<V> sortVertices(@Nonnull SortStrategy<T, V, E, Graph<T, V, E>> strategy) {
         return null;
     }
 
     @Override
+    @Nonnull
     public List<V> sortVertices() {
         return null;
     }
 
     @Override
-    public List<E> pathfind(V vert1, V vert2, PathfindStrategy<T, V, E, Graph<T, V, E>> strategy) {
+    @Nonnull
+    public List<E> pathfind(@Nonnull V vert1, @Nonnull V vert2, @Nonnull PathfindStrategy<T, V, E, Graph<T, V, E>> strategy) {
         return null;
     }
 
     @Override
-    public List<E> pathfind(T obj1, T obj2, PathfindStrategy<T, V, E, Graph<T, V, E>> strategy) {
+    @Nonnull
+    public List<E> pathfind(@Nullable T obj1, @Nullable T obj2, @Nonnull PathfindStrategy<T, V, E, Graph<T, V, E>> strategy) {
         return null;
     }
 
     @Override
-    public List<E> pathfind(V vert1, V vert2) {
+    @Nonnull
+    public List<E> pathfind(@Nonnull V vert1, @Nonnull V vert2) {
         return null;
     }
 
     @Override
-    public List<E> pathfind(T obj1, T obj2) {
+    @Nonnull
+    public List<E> pathfind(@Nullable T obj1, @Nullable T obj2) {
         return null;
     }
 
     @Override
-    public void addVertex(V vertex) {
+    public void addVertex(@Nonnull V vertex) {
 
     }
 
     @Override
-    public void removeVertex(V vertex) {
+    public void removeVertex(@Nonnull V vertex) {
 
     }
 
     @Override
-    public void addEdge(E edge) {
+    public void addEdge(@Nonnull E edge) {
 
     }
 
     @Override
-    public void removeEdge(E edge) {
+    public void removeEdge(@Nonnull E edge) {
 
     }
 
@@ -160,16 +188,23 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
     }
 
     @Override
+    public void clear() {
+        matrix.clear();
+    }
+
+    @Override
+    @Nonnull
     public Iterator<T> iterator() {
         return null;
     }
 
     @Override
-    public void forEach(Consumer<? super T> action) {
+    public void forEach(@Nonnull Consumer<? super T> action) {
 
     }
 
     @Override
+    @Nonnull
     public Spliterator<T> spliterator() {
         return null;
     }
@@ -181,16 +216,19 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
 
         private final ReadWriteLock lock;
         private final Map<V, Set<E>> matrix;
+        private final Map<V, T> vertexExchange;
         private final Supplier<Set<E>> setSupplier;
 
         AdjacencyMatrix(boolean concurrent) {
             if (concurrent) {
                 lock = new ReentrantReadWriteLock();
                 matrix = new ConcurrentHashMap<>();
+                vertexExchange = new ConcurrentHashMap<>();
                 setSupplier = ConcurrentHashMap::newKeySet;
             } else {
                 lock = null;
                 matrix = new HashMap<>();
+                vertexExchange = new HashMap<>();
                 setSupplier = HashSet::new;
             }
         }
@@ -215,7 +253,8 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
                 lock.readLock().unlock();
         }
 
-        Collection<E> edges(V v1, V v2) {
+        @Nonnull
+        Collection<E> edges(@Nonnull V v1, @Nonnull V v2) {
             readLock();
             if (!matrix.containsKey(v1) || !matrix.containsKey(v2))
                 return Collections.emptyList();
@@ -224,6 +263,7 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
             return c;
         }
 
+        @Nonnull
         Collection<E> edges() {
             readLock();
             Collection<E> c = matrix.values().stream().flatMap(Set::stream).collect(Collectors.toSet());
@@ -231,6 +271,7 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
             return c;
         }
 
+        @Nonnull
         Collection<V> vertices() {
             readLock();
             Collection<V> c = matrix.keySet();
@@ -238,6 +279,7 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
             return c;
         }
 
+        @Nonnull
         Collection<T> values() {
             readLock();
             Collection<T> c = matrix.keySet().stream().map(Vertex::get).collect(Collectors.toSet());
@@ -245,22 +287,25 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
             return c;
         }
 
-        void add(V v) {
+        void add(@Nonnull V v) {
             writeLock();
             matrix.putIfAbsent(v, setSupplier.get());
+            vertexExchange.put(v, v.get());
             writeUnlock();
         }
 
-        void add(E e) {
+        void add(@Nonnull E e) {
             writeLock();
             matrix.putIfAbsent(e.getFirstVertex(), setSupplier.get());
+            vertexExchange.putIfAbsent(e.getFirstVertex(), e.getFirstVertex().get());
             matrix.putIfAbsent(e.getSecondVertex(), setSupplier.get());
+            vertexExchange.putIfAbsent(e.getSecondVertex(), e.getSecondVertex().get());
             matrix.get(e.getFirstVertex()).add(e);
             matrix.get(e.getSecondVertex()).add(e);
             writeUnlock();
         }
 
-        void delete(V v) {
+        void delete(@Nonnull V v) {
             writeLock();
             Collection<E> edges = matrix.remove(v);
             if (edges != null) {
@@ -269,14 +314,63 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
                     matrix.get(other).removeIf(edge -> edge.contains(other));
                 });
             }
+            vertexExchange.remove(v);
             writeUnlock();
         }
 
-        void delete(E e) {
+        void delete(@Nonnull E e) {
             writeLock();
             matrix.get(e.getFirstVertex()).remove(e);
             matrix.get(e.getSecondVertex()).remove(e);
             writeUnlock();
+        }
+
+        void clear() {
+            writeLock();
+            matrix.clear();
+            vertexExchange.clear();
+            writeUnlock();
+        }
+    }
+
+    // Internal strategies optimized for this SimpleGraph implementation
+
+    private static void assertSimpleGraph(Graph g) {
+        if (!(g instanceof SimpleGraph)) {
+            throw new InvalidGraphConfigurationException();
+        }
+    }
+
+    private static final class DefaultPathfindStrategy<T, V extends Vertex<T>, E extends Edge<T, V>> implements PathfindStrategy<T, V, E, Graph<T, V, E>> {
+
+    }
+
+    private static final class DefaultSortStrategy<T, V extends Vertex<T>, E extends Edge<T, V>> implements SortStrategy<T, V, E, Graph<T, V, E>> {
+
+    }
+
+    private static final class DefaultTraversalStrategy<T, V extends Vertex<T>, E extends Edge<T, V>> implements TraversalStrategy<T, V, E, Graph<T, V, E>> {
+
+        @Override
+        @Nonnull
+        public Collection<V> traverseVertices(@Nonnull Graph<T, V, E> graph) {
+            assertSimpleGraph(graph);
+            SimpleGraph<T, V, E> g = (SimpleGraph<T, V, E>) graph;
+            return g.matrix.vertices();
+        }
+
+        @Override
+        @Nonnull
+        public Collection<E> traverseEdges(@Nonnull Graph<T, V, E> graph) {
+            assertSimpleGraph(graph);
+            SimpleGraph<T, V, E> g = (SimpleGraph<T, V, E>) graph;
+            return g.matrix.edges();
+        }
+
+        @Override
+        @Nonnull
+        public Collection<T> traverseValues(@Nonnull Graph<T, V, E> graph) {
+            return traverseVertices(graph).stream().map(Vertex::get).collect(Collectors.toSet());
         }
     }
 }
