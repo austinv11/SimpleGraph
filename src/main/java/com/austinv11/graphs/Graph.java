@@ -76,6 +76,15 @@ public interface Graph<T, V extends Vertex<T>, E extends Edge<T, V>> extends Ite
     @Nonnull
     List<E> pathfind(@Nullable T obj1, @Nullable T obj2);
 
+    @Nonnull
+    Collection<E> getConnectedEdges(@Nonnull V vertex);
+
+    @Nonnull
+    Collection<E> getOutwardEdges(@Nonnull V vertex);
+
+    @Nonnull
+    Collection<E> getInwardEdges(@Nonnull V vertex);
+
     void addVertex(@Nonnull V vertex);
 
     void removeVertex(@Nonnull V vertex);

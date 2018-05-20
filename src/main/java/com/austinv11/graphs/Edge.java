@@ -27,6 +27,18 @@ public interface Edge<T, V extends Vertex<T>> extends Iterable<T> {
     @Nonnull
     List<T> asList();
 
+    @Nonnull
+    Edge<T, V> reverse();
+
+    @Nonnull
+    default V getOther(@Nonnull V original) {
+        if (original.equals(getFirstVertex())) {
+            return getSecondVertex();
+        } else {
+            return getFirstVertex();
+        }
+    }
+
     boolean isDirected();
 
     default boolean contains(@Nonnull V vertex) {
