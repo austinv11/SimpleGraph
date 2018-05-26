@@ -235,6 +235,18 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
         return matrix.values().iterator();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SimpleGraph)) {
+            return false;
+        }
+        SimpleGraph<?, ?, ?> that = (SimpleGraph<?, ?, ?>) o;
+        return Objects.equals(matrix, that.matrix);
+    }
+
     /**
      * A fairly simple adjacency matrix, it opts for quicker operation times as opposed to memory efficiency.
      */
@@ -379,6 +391,19 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
             val = vertexExchange.get(vertex);
             readUnlock();
             return val;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof SimpleGraph.AdjacencyMatrix)) {
+                return false;
+            }
+            AdjacencyMatrix that = (SimpleGraph.AdjacencyMatrix) o;
+            return Objects.equals(matrix, that.matrix) &&
+                    Objects.equals(vertexExchange, that.vertexExchange);
         }
     }
 

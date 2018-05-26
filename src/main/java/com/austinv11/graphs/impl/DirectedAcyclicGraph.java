@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This is a {@link com.austinv11.graphs.Graph} wrapper which enforces directed, acyclic properties on a
@@ -216,5 +217,18 @@ public class DirectedAcyclicGraph<T, V extends Vertex<T>, E extends Edge<T,V>> i
     @Nonnull
     public Collection<E> getInwardEdges(@Nonnull V vertex) {
         return backing.getInwardEdges(vertex);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DirectedAcyclicGraph)) {
+            return false;
+        }
+        DirectedAcyclicGraph<?, ?, ?> that = (DirectedAcyclicGraph<?, ?, ?>) o;
+        return Objects.equals(backing, that.backing) &&
+                Objects.equals(strategy, that.strategy);
     }
 }
