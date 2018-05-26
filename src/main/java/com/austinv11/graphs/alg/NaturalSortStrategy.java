@@ -12,6 +12,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This sorts vertices according to the natural order of the objects they hold. This is essentially equivalent to
+ * extracting the collection of vertices from the graph object and sorting them via jdk methods. This means that the
+ * topology of the graph instance does not influence the output.
+ */
 public class NaturalSortStrategy<T, V extends Vertex<T>, E extends Edge<T, V>> implements SortStrategy<T, V, E, Graph<T, V, E>> {
 
     @Override

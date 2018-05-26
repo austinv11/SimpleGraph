@@ -40,6 +40,17 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
         matrix = new AdjacencyMatrix(concurrent);
     }
 
+    private SimpleGraph(@Nonnull TraversalStrategy<T, V, E, Graph<T, V, E>> defaultTraversal,
+                        @Nonnull SortStrategy<T, V, E, Graph<T, V, E>> defaultSort,
+                        @Nonnull PathfindStrategy<T, V, E, Graph<T, V, E>> defaultPathfind,
+                        @Nonnull AdjacencyMatrix matrix) {
+        this.defaultTraversal = defaultTraversal;
+        this.defaultSort = defaultSort;
+        this.defaultPathfind = defaultPathfind;
+
+        this.matrix = matrix;
+    }
+
     @Override
     @Nonnull
     public TraversalStrategy<T, V, E, Graph<T, V, E>> defaultTraversalStrategy() {
@@ -231,6 +242,12 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
 
     @Override
     @Nonnull
+    public SimpleGraph<T, V, E> copy() {
+        return new SimpleGraph<>(defaultTraversal, defaultSort, defaultPathfind, matrix.copy());
+    }
+
+    @Override
+    @Nonnull
     public Iterator<T> iterator() {
         return matrix.values().iterator();
     }
@@ -269,6 +286,23 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
                 vertexExchange = new HashMap<>();
                 setSupplier = HashSet::new;
             }
+        }
+
+        public AdjacencyMatrix(boolean concurrent,
+                               Map<V, Set<E>> matrix,
+                               Map<T, V> vertexExchange,
+                               Supplier<Set<E>> setSupplier) {
+            if (concurrent) {
+                lock = new ReentrantReadWriteLock();
+                this.matrix = new ConcurrentHashMap<>(matrix);
+                this.vertexExchange = new ConcurrentHashMap<>(vertexExchange);
+            } else {
+                lock = null;
+                this.matrix = new HashMap<>(matrix);
+                this.vertexExchange = new HashMap<>(vertexExchange);
+            }
+
+            this.setSupplier = setSupplier;
         }
 
         private void writeLock() {
@@ -404,6 +438,11 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
             AdjacencyMatrix that = (SimpleGraph.AdjacencyMatrix) o;
             return Objects.equals(matrix, that.matrix) &&
                     Objects.equals(vertexExchange, that.vertexExchange);
+        }
+
+        @Nonnull
+        AdjacencyMatrix copy() {
+            return new AdjacencyMatrix(lock != null, matrix, vertexExchange, setSupplier);
         }
     }
 

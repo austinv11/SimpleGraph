@@ -2,8 +2,8 @@ package com.austinv11.graphs;
 
 import javax.annotation.Nonnull;
 
-public interface PruneStrategy<T, V extends Vertex<T>, E extends Edge<T, V>, G extends Graph<T, V, E>> {
+public interface PruneStrategy<T, V extends Vertex<T>, E extends Edge<T, V>> {
 
     @Nonnull
-    G prune(@Nonnull G graph);
+    Graph<T, V, E> prune(@Nonnull V startVertex, @Nonnull Graph<T, V, E> graph);
 }

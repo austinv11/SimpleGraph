@@ -20,8 +20,14 @@ import java.util.Objects;
  */
 public class DirectedAcyclicGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements Graph<T, V, E> {
 
+    public static final String CHECK_CYCLE_ENV_NAME = "com.austinv11.graphs.check_cycles";
+
+    private static final boolean DEFAULT_CHECK_CYCLES = Boolean.parseBoolean(System.getenv().getOrDefault(CHECK_CYCLE_ENV_NAME, "true"));
+
     private final Graph<T, V, E> backing;
     private final CycleDetectionStrategy<T, V, E, Graph<T, V, E>> strategy;
+
+    private boolean checkForCycles = DEFAULT_CHECK_CYCLES;
 
     public DirectedAcyclicGraph(Graph<T, V, E> backing) {
         this(backing, new ColoringCycleDetectionStrategy<>());
@@ -169,10 +175,18 @@ public class DirectedAcyclicGraph<T, V extends Vertex<T>, E extends Edge<T,V>> i
             throw new InvalidGraphConfigurationException("Edges must be directed!");
 
         backing.addEdge(edge);
-        if (strategy.findCycle(backing)) {
+        if (checkForCycles && strategy.findCycle(backing)) {
             backing.removeEdge(edge);
             throw new CycleException();
         }
+    }
+
+    public void setCycleDetection(boolean detectCycles) {
+        checkForCycles = detectCycles;
+    }
+
+    public boolean isDetectingCycles() {
+        return checkForCycles;
     }
 
     @Override
@@ -193,6 +207,12 @@ public class DirectedAcyclicGraph<T, V extends Vertex<T>, E extends Edge<T,V>> i
     @Override
     public void clear() {
         backing.clear();
+    }
+
+    @Override
+    @Nonnull
+    public DirectedAcyclicGraph<T, V, E> copy() {
+        return new DirectedAcyclicGraph<>(backing.copy(), strategy);
     }
 
     @Override

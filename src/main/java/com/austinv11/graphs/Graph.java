@@ -99,6 +99,9 @@ public interface Graph<T, V extends Vertex<T>, E extends Edge<T, V>> extends Ite
 
     void clear();
 
+    @Nonnull
+    Graph<T, V, E> copy();
+
     @Override
     @Nonnull
     default Iterator<T> iterator() {
