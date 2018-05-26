@@ -31,6 +31,31 @@ public interface Edge<T, V extends Vertex<T>> extends Iterable<T> {
     Edge<T, V> reverse();
 
     @Nonnull
+    default Edge<T, V> ensureOrder(@Nonnull V first) {
+        if (!first.equals(getFirstVertex())) {
+            throw new RuntimeException("Passed vertices are not present in this edge!");
+        }
+
+        if (getFirstVertex().equals(first)) {
+            return this;
+        } else {
+            if (isDirected()) {
+                throw new RuntimeException("Cannot flip a directed edge!");
+            }
+            return reverse();
+        }
+    }
+
+
+    @Nonnull
+    default Edge<T, V> ensureOrder(@Nonnull V first, @Nonnull V second) {
+        if (!second.equals(getSecondVertex())) {
+            throw new RuntimeException("Passed vertices are not present in this edge!");
+        }
+        return ensureOrder(first);
+    }
+
+    @Nonnull
     default V getOther(@Nonnull V original) {
         if (original.equals(getFirstVertex())) {
             return getSecondVertex();
