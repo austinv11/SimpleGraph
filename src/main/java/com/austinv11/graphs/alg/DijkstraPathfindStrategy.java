@@ -21,7 +21,6 @@ import java.util.function.Supplier;
  *
  * @see <a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Wikipedia page</a>
  * @see <a href="https://github.com/trudeau/fibonacci-heap">Java Fibonacci Heap implementation</a>
- * @see com.austinv11.graphs.alg.AStarPathfindStrategy
  * @see com.austinv11.graphs.alg.DijkstraPruneStrategy
  */
 public class DijkstraPathfindStrategy<T, V extends Vertex<T>, E extends Edge<T, V>> implements PathfindStrategy<T, V, E, Graph<T, V, E>>  {

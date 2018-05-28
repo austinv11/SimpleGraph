@@ -1,7 +1,7 @@
 package com.austinv11.graphs.impl;
 
 import com.austinv11.graphs.*;
-import com.austinv11.graphs.alg.AStarPathfindStrategy;
+import com.austinv11.graphs.alg.DijkstraPathfindStrategy;
 import com.austinv11.graphs.alg.NaturalSortStrategy;
 import com.austinv11.graphs.util.InvalidGraphConfigurationException;
 
@@ -21,6 +21,10 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
     private final PathfindStrategy<T, V, E, Graph<T, V, E>> defaultPathfind;
 
     private final AdjacencyMatrix matrix;
+
+    public SimpleGraph() {
+        this(false);
+    }
 
     public SimpleGraph(boolean concurrent) {
         this(new DefaultTraversalStrategy<>(),
@@ -456,8 +460,7 @@ public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements
 
     private static final class DefaultPathfindStrategy<T, V extends Vertex<T>, E extends Edge<T, V>> implements PathfindStrategy<T, V, E, Graph<T, V, E>> {
 
-        //A* impl has internal optimizations
-        private final AStarPathfindStrategy<T, V, E> delegate = new AStarPathfindStrategy<>();
+        private final DijkstraPathfindStrategy<T, V, E> delegate = new DijkstraPathfindStrategy<>();
 
         @Override
         @Nonnull
