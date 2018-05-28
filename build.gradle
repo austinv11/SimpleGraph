@@ -7,7 +7,7 @@ plugins {
 }
 
 ext {
-    ver = '1.0.0-PREVIEW'
+    ver = '1.0.0'
     pkg = 'com.austinv11.graphs'
 }
 
