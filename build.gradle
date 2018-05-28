@@ -2,10 +2,17 @@ plugins {
     id 'java'
     id 'idea'
     id 'maven'
+    id 'maven-publish'
+    id "com.jfrog.bintray" version "1.8.0"
 }
 
-group 'com.austinv11.graphs'
-version '1.0-SNAPSHOT'
+ext {
+    ver = '1.0.0-PREVIEW'
+    pkg = 'com.austinv11.graphs'
+}
+
+group pkg
+version ver
 
 sourceCompatibility = 1.8
 
@@ -36,4 +43,51 @@ javadoc {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['MyPublication']
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "MIT"
+            url "https://opensource.org/licenses/MIT"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "austinv11"
+            name "Austin Varela"
+//            email "dev@d.com"
+        }
+    }
+
+    scm {
+        url "https://github.com/austinv11/SimpleGraph"
+    }
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            groupId pkg
+            artifactId 'SimpleGraph'
+            version ver
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'A simple Java implementation of the graph data structure.')
+                root.appendNode('name', 'SimpleGraph')
+                root.appendNode('url', 'https://github.com/austinv11/SimpleGraph')
+                root.children().last() + pomConfig
+            }
+        }
+    }
 }
