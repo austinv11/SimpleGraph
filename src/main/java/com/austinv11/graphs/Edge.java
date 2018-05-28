@@ -66,6 +66,10 @@ public interface Edge<T, V extends Vertex<T>> extends Iterable<T> {
 
     boolean isDirected();
 
+    default boolean isLoop() {
+        return getFirstVertex().equals(getSecondVertex());
+    }
+
     default boolean contains(@Nonnull V vertex) {
         return getFirstVertex().equals(vertex) || getSecondVertex().equals(vertex);
     }

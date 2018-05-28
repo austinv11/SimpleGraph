@@ -16,11 +16,26 @@ import java.util.stream.Collectors;
  * algorithm is asymptotically O(|E| + |V|log|V|). This assumes weighted graphs, unweighted graphs will create
  * undefined results. Additionally, the graph should be fully connected, otherwise vertices will be pruned off.
  *
+ * Additionally, this supports being called without a starting vertex, however the resulting tree is not guaranteed
+ * to be minimum spanning. {@link com.austinv11.graphs.alg.KruskalPruneStrategy} is more suited to this use-case.
+ *
  * @see <a href="https://en.wikipedia.org/wiki/Prim%27s_algorithm">Wikipedia page</a>
  * @see com.austinv11.graphs.alg.KruskalPruneStrategy
- * @see com.austinv11.graphs.alg.DijkstraPathfindStrategy
+ * @see com.austinv11.graphs.alg.DijkstraPruneStrategy
  */
 public class PrimPruneStrategy<T, V extends Vertex<T>, E extends Edge<T, V>> implements PruneStrategy<T, V, E> {
+
+    @Nonnull
+    @Override
+    public Graph<T, V, E> prune(@Nonnull Graph<T, V, E> graph) {
+        return prune(graph, SimpleGraph::new);
+    }
+
+    @Nonnull
+    @Override
+    public Graph<T, V, E> prune(@Nonnull Graph<T, V, E> graph, @Nonnull Supplier<? extends Graph<T, V, E>> newGraphSupplier) {
+        return prune(graph.vertices().stream().findFirst().get(), graph, newGraphSupplier);
+    }
 
     @Override
     @Nonnull
