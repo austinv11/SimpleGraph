@@ -16,6 +16,9 @@ import java.util.function.Supplier;
  * specified starting vertex. The adaption is based off of the code in
  * {@link com.austinv11.graphs.alg.DijkstraPathfindStrategy} so refer to those docs for specific implementation details.
  *
+ * This supports being called without a source vertex, but the result is undefined under such configuration. It is
+ * recommended to use {@link com.austinv11.graphs.alg.KruskalPruneStrategy} instead in such a case.
+ *
  * @see <a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Wikipedia page</a>
  * @see <a href="https://github.com/trudeau/fibonacci-heap">Java Fibonacci Heap implementation</a>
  * @see com.austinv11.graphs.alg.DijkstraPathfindStrategy
@@ -24,14 +27,37 @@ import java.util.function.Supplier;
  */
 public class DijkstraPruneStrategy<T, V extends Vertex<T>, E extends Edge<T, V>> implements PruneStrategy<T, V, E> {
 
+    private final Supplier<Queue<? extends Comparable<?>>> queueSupplier;
+
+    public DijkstraPruneStrategy() {
+        this(PriorityQueue::new);
+    }
+
+    public DijkstraPruneStrategy(Supplier<Queue<? extends Comparable<?>>> queueSupplier) {
+        this.queueSupplier = queueSupplier;
+    }
+
+    @Override
+    @Nonnull
+    public Graph<T, V, E> prune(@Nonnull Graph<T, V, E> graph) {
+        return prune(graph, SimpleGraph::new);
+    }
+
+    @Override
+    @Nonnull
+    public Graph<T, V, E> prune(@Nonnull Graph<T, V, E> graph, @Nonnull Supplier<? extends Graph<T, V, E>> newGraphSupplier) {
+        return prune(graph.vertices().stream().findFirst().get(), graph, newGraphSupplier);
+    }
+
     @Override
     @Nonnull
     public Graph<T, V, E> prune(@Nonnull V startVertex, @Nonnull Graph<T, V, E> graph) {
-        return prune(startVertex, graph, PriorityQueue::new);
+        return prune(startVertex, graph, SimpleGraph::new);
     }
 
+    @Override
     @Nonnull
-    public Graph<T, V, E> prune(@Nonnull V startVertex, @Nonnull Graph<T, V, E> graph, @Nonnull Supplier<Queue<? extends Comparable<?>>> queueSupplier) {
+    public Graph<T, V, E> prune(@Nonnull V startVertex, @Nonnull Graph<T, V, E> graph, @Nonnull Supplier<? extends Graph<T, V, E>> newGraphSupplier) {
         Map<V, DijkstraNode<V>> nodeMap = new HashMap<>();
         Set<V> visited = new HashSet<>();
 
@@ -68,7 +94,7 @@ public class DijkstraPruneStrategy<T, V extends Vertex<T>, E extends Edge<T, V>>
                 break;
         }
 
-        DirectedAcyclicGraph<T, V, E> newGraph = new DirectedAcyclicGraph<>(new SimpleGraph<>(false));
+        DirectedAcyclicGraph<T, V, E> newGraph = new DirectedAcyclicGraph<>(newGraphSupplier.get());
         boolean origCycleDetect = newGraph.isDetectingCycles();
         newGraph.setCycleDetection(false); //Improve performance during graph construction as this should output a DAG
 

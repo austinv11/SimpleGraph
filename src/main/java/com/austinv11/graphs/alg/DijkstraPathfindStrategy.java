@@ -25,14 +25,19 @@ import java.util.function.Supplier;
  */
 public class DijkstraPathfindStrategy<T, V extends Vertex<T>, E extends Edge<T, V>> implements PathfindStrategy<T, V, E, Graph<T, V, E>>  {
 
+    private final Supplier<Queue<? extends Comparable<?>>> queueSupplier;
+
+    public DijkstraPathfindStrategy() {
+        this(PriorityQueue::new);
+    }
+
+    public DijkstraPathfindStrategy(Supplier<Queue<? extends Comparable<?>>> queueSupplier) {
+        this.queueSupplier = queueSupplier;
+    }
+
     @Override
     @Nonnull
     public List<E> pathfind(@Nonnull V vertex1, @Nonnull V vertex2, @Nonnull Graph<T, V, E> graph) {
-        return pathfind(vertex1, vertex2, graph, PriorityQueue::new);
-    }
-
-    @Nonnull
-    public List<E> pathfind(@Nonnull V vertex1, @Nonnull V vertex2, @Nonnull Graph<T, V, E> graph, Supplier<Queue<? extends Comparable<?>>> queueSupplier) {
         if (vertex1.equals(vertex2))
             return Collections.emptyList();
 
