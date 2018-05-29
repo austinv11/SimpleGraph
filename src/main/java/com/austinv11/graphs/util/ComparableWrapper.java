@@ -4,6 +4,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Comparator;
 
+/**
+ * An object wrapper which centralizes comparable logic by using the object itself if it implements comparable,
+ * else it uses a provided comparator.
+ */
 public class ComparableWrapper<T> implements Comparable<T> {
 
     private final T obj;

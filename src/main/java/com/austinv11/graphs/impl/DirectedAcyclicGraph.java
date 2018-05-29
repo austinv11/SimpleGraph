@@ -181,10 +181,16 @@ public class DirectedAcyclicGraph<T, V extends Vertex<T>, E extends Edge<T,V>> i
         }
     }
 
+    /**
+     * Sets whether this graph should actively check for cycles.
+     */
     public void setCycleDetection(boolean detectCycles) {
         checkForCycles = detectCycles;
     }
 
+    /**
+     * Gets whether this graph is actively checking for cycles.
+     */
     public boolean isDetectingCycles() {
         return checkForCycles;
     }

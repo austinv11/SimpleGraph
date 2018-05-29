@@ -5,6 +5,9 @@ import com.austinv11.graphs.Vertex;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+/**
+ * A basic implementation of a vertex.
+ */
 public class SimpleVertex<T> implements Vertex<T> {
 
     private final T obj;

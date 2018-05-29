@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * An iterator implementation which can be statically constructed using a var-arg array.
+ */
 public class VarArgIterator<E> implements Iterator<E> {
 
     private final E[] elements;

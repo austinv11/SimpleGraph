@@ -14,6 +14,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * A simple graph implementation backed by an adjacency matrix. This implementation is not recommended
+ * for extremely large and complex graphs as it is memory inefficient in order to make its operations
+ * more efficient in terms of cpu cycles.
+ */
 public class SimpleGraph<T, V extends Vertex<T>, E extends Edge<T,V>> implements Graph<T, V, E> {
 
     private final TraversalStrategy<T, V, E, Graph<T, V, E>> defaultTraversal;
