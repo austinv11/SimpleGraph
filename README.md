@@ -1,4 +1,4 @@
-# SimpleGraph ![JCenter](https://img.shields.io/bintray/v/austinv11/maven/SimpleGraph.svg?style=flat-square)](https://bintray.com/austinv11/maven/SimpleGraph/_latestVersion)
+# SimpleGraph [![JCenter](https://img.shields.io/bintray/v/austinv11/maven/SimpleGraph.svg?style=flat-square)](https://bintray.com/austinv11/maven/SimpleGraph/_latestVersion)
 This is a Java implementation of the graph data structure and some 
 related algorithms. This library is meant to be as simple and 
 easy to use as possible. Additionally, it attempts to be speedy. Although,
