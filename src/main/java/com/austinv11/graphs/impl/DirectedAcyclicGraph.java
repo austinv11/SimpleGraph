@@ -170,7 +170,7 @@ public class DirectedAcyclicGraph<T, V extends Vertex<T>, E extends Edge<T,V>> i
     }
 
     @Override
-    public void addEdge(@Nonnull E edge) {
+    public void addEdge(@Nonnull E edge) throws CycleException {
         if (!edge.isDirected())
             throw new InvalidGraphConfigurationException("Edges must be directed!");
 
