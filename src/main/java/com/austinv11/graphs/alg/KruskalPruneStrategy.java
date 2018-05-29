@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  * Additionally, this supports being called with a starting vertex, however this parameter is totally ignored
  * {@link com.austinv11.graphs.alg.PrimPruneStrategy} is more suited to this use-case.
  *
- * @see <a href="https://en.wikipedia.org/wiki/Prim%27s_algorithm">Wikipedia page</a>
+ * @see <a href="https://en.wikipedia.org/wiki/Kruskal%27s_algorithm">Wikipedia page</a>
  * @see com.austinv11.graphs.alg.PrimPruneStrategy
  * @see com.austinv11.graphs.alg.DijkstraPruneStrategy
  */
